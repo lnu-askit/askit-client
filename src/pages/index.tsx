@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { type FormEvent } from "react";
 import ChatMessage from "~/components/ChatMessage";
+import MessageForm from "~/components/MessageForm";
 
 const messages = [
   { type: "user", content: "Jag vill ha hjälp med att få igång min VPN." },
@@ -30,7 +30,10 @@ const Home: NextPage = () => {
 
           <div className="h-full w-[800px] justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
             <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
-              <ChatMessage type="assistant" content='Hejsan! Vad kan jag hjälpa dig med idag?' />
+              <ChatMessage
+                type="assistant"
+                content="Hejsan! Vad kan jag hjälpa dig med idag?"
+              />
 
               {messages.map(({ type, content }) => (
                 <ChatMessage key={type} type={type} content={content} />
@@ -38,38 +41,13 @@ const Home: NextPage = () => {
             </div>
 
             <div className="h-auto w-full place-self-end bg-slate-700">
-              <form action="/api/recieve" onSubmit={handleSubmit}>
-                <div className="no-wrap flex p-2">
-                  <textarea
-                    tabIndex={0}
-                    className="normal-whitespace h-20 w-full max-w-full grow resize-none break-words rounded-md bg-slate-100 p-2"
-                    id="message"
-                    name="message"
-                    required
-                  />
-
-                  <button
-                    className="ml-2 h-10 shrink-0 grow-0 rounded-md bg-gray-500 pl-3 pr-3"
-                    type="submit"
-                  >
-                    Send
-                  </button>
-                </div>
-              </form>
+              <MessageForm />
             </div>
           </div>
         </div>
       </main>
     </>
   );
-};
-
-const handleSubmit = (event: FormEvent) => {
-  // Stop the form from submitting and refreshing the page.
-  event.preventDefault();
-  (event.target as HTMLInputElement).value = ''
-
-  console.log("banana");
 };
 
 export default Home;
