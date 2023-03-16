@@ -4,10 +4,6 @@ import { type FormEvent } from "react";
 import ChatMessage from "~/components/ChatMessage";
 
 const messages = [
-  {
-    type: "assistant",
-    content: "Hejsan svejsan! Vad kan jag hjälpa dig med idag?",
-  },
   { type: "user", content: "Jag vill ha hjälp med att få igång min VPN." },
   { type: "assistant", content: "Okej! Sitter du på Mac eller Windows?" },
   { type: "user", content: "Det vill inte jag berätta för dig." },
@@ -34,6 +30,8 @@ const Home: NextPage = () => {
 
           <div className="h-full w-[800px] justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
             <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
+              <ChatMessage type="assistant" content='Hejsan! Vad kan jag hjälpa dig med idag?' />
+
               {messages.map(({ type, content }) => (
                 <ChatMessage key={type} type={type} content={content} />
               ))}
@@ -69,6 +67,7 @@ const Home: NextPage = () => {
 const handleSubmit = (event: FormEvent) => {
   // Stop the form from submitting and refreshing the page.
   event.preventDefault();
+  (event.target as HTMLInputElement).value = ''
 
   console.log("banana");
 };
