@@ -11,10 +11,10 @@ export default function handler(req: SubscribeRequest, res: NextApiResponse) {
     return;
   }
 
-  const message = req.body.message;
+  const messages = req.body;
   //do something with the message
 
-  console.log(`Sending message: "${message}" to chatGPT`);
+  console.log(messages);
 
   return res.status(200).json({ success: true });
 }

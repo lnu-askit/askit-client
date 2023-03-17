@@ -21,15 +21,14 @@ const Home: NextPage = () => {
   ): Promise<void> => {
     e.preventDefault();
     // 👇 encode the data to application/x-www-form-urlencoded type
-    const formData = new URLSearchParams();
-    formData.append("message", message);
+    const data = [...messages, { id: messages.length + 1, role: "user", content: message }]
 
     // 👇 call backend endpoint using fetch api
     await fetch("/api/chat", {
-      body: formData.toString(),
+      body: JSON.stringify(data),
       method: "post",
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
+        "content-type": "application/json",
       },
     }).then(() => {
       setMessages([
