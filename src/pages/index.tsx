@@ -12,7 +12,7 @@ export interface ChatCompletionRequestMessage {
 }
 
 interface chatResponse {
-  user: string,
+  role: string,
   content: string
 }
 
@@ -42,10 +42,11 @@ const Home: NextPage = () => {
       },
     }).then(async (result) => {
       const answer = await result.json() as chatResponse
+      console.log(answer)
 
       tempMessages = [
         ...tempMessages,
-        { id: tempMessages.length + 1, role: answer.user, content: answer.content }
+        { id: tempMessages.length + 1, role: answer.role, content: answer.content }
       ]
 
       setMessages(tempMessages)
