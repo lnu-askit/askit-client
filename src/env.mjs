@@ -6,7 +6,7 @@ import { z } from "zod";
  */
 const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
-  OPENAI_KEY: z.string()
+  OPENAI_KEY: z.string().nonempty()
 });
 
 /**

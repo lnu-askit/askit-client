@@ -37,7 +37,8 @@ export default async function handler(
 
   const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
 			headers: {
-				Authorization: `Bearer ${OPENAI_KEY}`,
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				Authorization: `Bearer ${process.env.OPENAI_KEY}`,
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
