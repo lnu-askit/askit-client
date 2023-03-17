@@ -1,19 +1,45 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import { type NextPage } from "next";
+import { useState } from "react";
 import Head from "next/head";
 import ChatMessage from "~/components/ChatMessage";
-import MessageForm from "~/components/MessageForm";
 
-const messages = [
-  { type: "user", content: "Jag vill ha hjälp med att få igång min VPN." },
-  { type: "assistant", content: "Okej! Sitter du på Mac eller Windows?" },
-  { type: "user", content: "Det vill inte jag berätta för dig." },
-  { type: "assistant", content: "Okej :( Vad taskigt..." },
-  { type: "user", content: "Okej då :) Jag sitter på Mac." },
-  { type: "assistant", content: ":)" },
-  { type: "user", content: ":)" },
-];
+interface StateProperties {
+  id: number;
+  role: string;
+  content: string;
+}
 
 const Home: NextPage = () => {
+  // 👇track form state
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<StateProperties[]>([]);
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    // 👇 encode the data to application/x-www-form-urlencoded type
+    const formData = new URLSearchParams();
+    formData.append("message", message);
+
+    // 👇 call backend endpoint using fetch api
+    await fetch("/api/chat", {
+      body: formData.toString(),
+      method: "post",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+    }).then(() => {
+      setMessages([
+        ...messages,
+        { id: messages.length + 1, role: "user", content: message },
+      ]);
+      setMessage("");
+    });
+  };
+
   return (
     <>
       <Head>
@@ -28,20 +54,39 @@ const Home: NextPage = () => {
             Powered by gpt-3.5-turbo
           </h6>
 
-          <div className="h-full w-[800px] justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
+          <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
             <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
               <ChatMessage
-                type="assistant"
+                id={0}
+                role="assistant"
                 content="Hejsan! Vad kan jag hjälpa dig med idag?"
               />
 
-              {messages.map(({ type, content }) => (
-                <ChatMessage key={type} type={type} content={content} />
+              {messages.map(({ id, role, content }) => (
+                <ChatMessage key={id} id={id} role={role} content={content} />
               ))}
             </div>
 
             <div className="h-auto w-full place-self-end bg-slate-700">
-              <MessageForm />
+              <form action="/api/recieve" onSubmit={handleSubmit}>
+                <div className="no-wrap flex p-2">
+                  <textarea
+                    tabIndex={0}
+                    className="normal-whitespace h-20 w-full max-w-full grow resize-none break-words rounded-md bg-slate-100 p-2"
+                    name="message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    required
+                  />
+
+                  <button
+                    className="ml-2 h-10 shrink-0 grow-0 rounded-md bg-gray-500 pl-3 pr-3"
+                    type="submit"
+                  >
+                    Send
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
