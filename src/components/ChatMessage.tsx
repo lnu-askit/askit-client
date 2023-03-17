@@ -26,7 +26,7 @@ export default function ChatMessage({
             />
           </div>
 
-          <p className="max-w-lg whitespace-pre-wrap rounded-tl-lg rounded-tr-lg rounded-br-lg bg-slate-100 p-2">
+          <p className="max-w-lg whitespace-pre-wrap rounded-tl-lg rounded-tr-lg rounded-br-lg bg-sky-200 p-2">
             {content}
           </p>
         </div>
