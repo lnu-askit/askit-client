@@ -5,7 +5,7 @@ import { useState } from "react";
 import Head from "next/head";
 import ChatMessage from "~/components/ChatMessage";
 
-interface StateProperties {
+interface MessageProperties {
   id: number;
   role: string;
   content: string;
@@ -14,7 +14,7 @@ interface StateProperties {
 const Home: NextPage = () => {
   // 👇track form state
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<StateProperties[]>([]);
+  const [messages, setMessages] = useState<MessageProperties[]>([]);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
