@@ -26,9 +26,9 @@ export default function ChatMessage({
             />
           </div>
 
-          <div className="max-w-lg rounded-tl-lg rounded-tr-lg rounded-br-lg bg-slate-100 p-2">
+          <p className="max-w-lg whitespace-pre-wrap rounded-tl-lg rounded-tr-lg rounded-br-lg bg-slate-100 p-2">
             {content}
-          </div>
+          </p>
         </div>
       </div>
     );
@@ -46,9 +46,9 @@ export default function ChatMessage({
             />
           </div>
 
-          <div className="max-w-lg rounded-tl-lg rounded-tr-lg rounded-bl-lg bg-slate-100 p-2">
+          <p className="max-w-lg whitespace-pre-wrap rounded-tl-lg rounded-tr-lg rounded-bl-lg bg-slate-100 p-2">
             {content}
-          </div>
+          </p>
         </div>
       </div>
     );
