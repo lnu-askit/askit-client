@@ -5,37 +5,50 @@ import { useState } from "react";
 import Head from "next/head";
 import ChatMessage from "~/components/ChatMessage";
 
-interface MessageProperties {
+export interface ChatCompletionRequestMessage {
   id: number;
   role: string;
   content: string;
 }
 
+interface chatResponse {
+  user: string,
+  content: string
+}
+
 const Home: NextPage = () => {
   // 👇track form state
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<MessageProperties[]>([]);
+  const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
     // 👇 encode the data to application/x-www-form-urlencoded type
-    const data = [...messages, { id: messages.length + 1, role: "user", content: message }]
+    let tempMessages = [
+      ...messages,
+      { id: messages.length + 1, role: "user", content: message },
+    ]
+    setMessages(tempMessages);
+    setMessage("");
 
     // 👇 call backend endpoint using fetch api
     await fetch("/api/chat", {
-      body: JSON.stringify(data),
+      body: JSON.stringify(tempMessages),
       method: "post",
       headers: {
         "content-type": "application/json",
       },
-    }).then(() => {
-      setMessages([
-        ...messages,
-        { id: messages.length + 1, role: "user", content: message },
-      ]);
-      setMessage("");
+    }).then(async (result) => {
+      const answer = await result.json() as chatResponse
+
+      tempMessages = [
+        ...tempMessages,
+        { id: tempMessages.length + 1, role: answer.user, content: answer.content }
+      ]
+
+      setMessages(tempMessages)
     });
   };
 

@@ -1,20 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import type {
+  ChatCompletionRequestMessage,
+} from "openai";
+
 interface SubscribeRequest extends NextApiRequest {
-  body: {
-    message: string;
-  };
+  body: ChatCompletionRequestMessage[];
 }
 
-export default function handler(req: SubscribeRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).send("Method not allowed");
-    return;
-  }
+export default function handler(
+  req: SubscribeRequest,
+  res: NextApiResponse
+) {
 
-  const messages = req.body;
-  //do something with the message
+  const reqMessages: ChatCompletionRequestMessage[] = req.body;
 
-  console.log(messages);
-
-  return res.status(200).json({ success: true });
+  console.log(reqMessages)
+  setTimeout(() => {
+    res.status(200).json({user: 'assistant', content: 'what?'})
+    return
+  }, 2000)
 }
