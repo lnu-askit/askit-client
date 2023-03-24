@@ -1,41 +1,40 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import type { NextRequest } from "next/server";
-import { OpenAI } from "openai-streams";
 import type { ChatCompletionRequestMessage } from 'openai'
-import { yieldStream } from "yield-stream"
+import { OpenAIStream } from "utils/OpenAIStream";
+
+export interface ChatApiInput {
+  messages: ChatCompletionRequestMessage[];
+}
 
 export default async function chat(req: NextRequest) {
-  console.log('chat:', await req.json())
+  const { messages } = await req.json()
+
+  const filteredMessages: ChatCompletionRequestMessage[] = messages.map((message: { role: string; content: string; }) => ({
+    role: message.role,
+    content: message.content
+  }));
 
   const prompt = 'You are a chatbot. Behave accordingly.'
-  const messages: ChatCompletionRequestMessage[] = [
+  const sendMessages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: prompt },
-    { role: 'user', content: 'Can you provide me with the first two words of the bee movie script please.' }
+    ...filteredMessages
   ]
 
-  const stream = await OpenAI("chat", {
+  const apiKey = process.env.OPENAI_KEY || '';
+  
+  const stream: ReadableStream = await OpenAIStream(apiKey, {
     model: "gpt-3.5-turbo",
-    messages,
-    temperature: 0.1
-    }, { apiKey: process.env.OPENAI_KEY}
+    messages: sendMessages,
+    temperature: 0.1,
+    max_tokens: 500
+    }
   );
   
-  const res = new Response(stream)
-
-  if (!res.ok) {
-    throw new Error(res.statusText);
-  }
-
-  const data = res.body;
-
-  if (!data) {
-    throw new Error('no data')
-  }
-
-  for await (const chunk of yieldStream(data)) {
-    console.log('1')
-    console.log(chunk)
-  }
-  // return new Response(stream);
+  return new Response(stream);
 }
 
 export const config = {
