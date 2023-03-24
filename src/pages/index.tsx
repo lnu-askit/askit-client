@@ -11,6 +11,7 @@ export interface ChatMessageProps {
   id: string;
   role: string;
   content: string;
+  model?: string;
 }
 
 export default function Home() {
@@ -43,13 +44,13 @@ export default function Home() {
         console.log(messageText)
 
         // there may be a JSON object at the beginning of the message, which contains the model name (streaming workaround)
-        if (!newBotMessage.role && newBotMessage.content.startsWith('{')) {
+        if (!newBotMessage.model && newBotMessage.content.startsWith('{')) {
           const endOfJson = newBotMessage.content.indexOf('}');
           if (endOfJson > 0) {
             const json = newBotMessage.content.substring(0, endOfJson + 1);
             try {
               const parsed = JSON.parse(json);
-              newBotMessage.role = parsed.model;
+              newBotMessage.model = parsed.model;
               newBotMessage.content = newBotMessage.content.substring(endOfJson + 1);
             } catch (e) {
               // error parsing JSON, ignore
