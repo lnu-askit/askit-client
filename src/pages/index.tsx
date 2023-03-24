@@ -60,8 +60,10 @@ export default function Home() {
         }
 
         setMessages(list => {
-          // if missing, add the message at the end of the list, otherwise set a new list anyway, to trigger a re-render
+          // find the message to update with new text tokens.
           const message = list.find(message => message.id === newBotMessage.id);
+
+          // update the message with the new text content, re-render the message-list anyway if the message couldn't be found.
           return !message ? [...list, newBotMessage] : [...list];
         });
       }
