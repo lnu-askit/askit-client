@@ -1,52 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { NextApiRequest, NextApiResponse } from "next";
-import type {
-  CreateChatCompletionRequest,
-  ChatCompletionRequestMessage
-} from "openai";
+import type { NextRequest } from "next/server";
+import { OpenAI } from "openai-streams";
+import type { ChatCompletionRequestMessage } from 'openai'
+import { yieldStream } from "yield-stream"
 
-interface SubscribeRequest extends NextApiRequest {
-  body: ChatCompletionRequestMessage[];
-}
-
-export default async function handler(
-  req: SubscribeRequest,
-  res: NextApiResponse
-) {
-
-  const reqMessages: ChatCompletionRequestMessage[] = req.body.map((message) => ({
-    role: message.role,
-    content: message.content
-  }));
+export default async function chat(req: NextRequest) {
+  console.log('chat:', await req.json())
 
   const prompt = 'You are a chatbot. Behave accordingly.'
   const messages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: prompt },
-    ...reqMessages
+    { role: 'user', content: 'Can you provide me with the first two words of the bee movie script please.' }
   ]
 
-  const chatRequestOpts: CreateChatCompletionRequest = {
-    model: 'gpt-3.5-turbo',
+  const stream = await OpenAI("chat", {
+    model: "gpt-3.5-turbo",
     messages,
     temperature: 0.1
+    }, { apiKey: process.env.OPENAI_KEY}
+  );
+  
+  const res = new Response(stream)
+
+  if (!res.ok) {
+    throw new Error(res.statusText);
   }
 
-  console.log(messages)
-  console.log(chatRequestOpts)
+  const data = res.body;
 
-  const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-			headers: {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				Authorization: `Bearer ${process.env.OPENAI_KEY}`,
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify(chatRequestOpts)
-		})
+  if (!data) {
+    throw new Error('no data')
+  }
 
-  const answer = await chatResponse.json()
-
-  console.log(answer)
-  res.status(200).json(answer.choices[0].message)
+  for await (const chunk of yieldStream(data)) {
+    console.log('1')
+    console.log(chunk)
+  }
+  // return new Response(stream);
 }
+
+export const config = {
+  runtime: "edge"
+};

@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "next": "^13.2.1",
+    "nextjs-openai": "^3.0.9",
     "openai": "^3.2.1",
+    "openai-streams": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sse.js": "^0.6.1",
