@@ -4,9 +4,9 @@ import avatar from "public/astro.png";
 export default function ChatMessage({
   id,
   role,
-  content,
+  content
 }: {
-  id: number;
+  id: string;
   role: string;
   content: string;
 }) {

@@ -1,52 +1,42 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import type { NextApiRequest, NextApiResponse } from "next";
-import type {
-  CreateChatCompletionRequest,
-  ChatCompletionRequestMessage
-} from "openai";
 
-interface SubscribeRequest extends NextApiRequest {
-  body: ChatCompletionRequestMessage[];
+import type { NextRequest } from "next/server";
+import type { ChatCompletionRequestMessage } from 'openai'
+import { OpenAIStream } from "utils/OpenAIStream";
+
+export interface ChatApiInput {
+  messages: ChatCompletionRequestMessage[];
 }
 
-export default async function handler(
-  req: SubscribeRequest,
-  res: NextApiResponse
-) {
+export default async function chat(req: NextRequest) {
+  const { messages } = await req.json()
 
-  const reqMessages: ChatCompletionRequestMessage[] = req.body.map((message) => ({
+  const filteredMessages: ChatCompletionRequestMessage[] = messages.map((message: { role: string; content: string; }) => ({
     role: message.role,
     content: message.content
   }));
 
   const prompt = 'You are a chatbot. Behave accordingly.'
-  const messages: ChatCompletionRequestMessage[] = [
+  const sendMessages: ChatCompletionRequestMessage[] = [
     { role: 'system', content: prompt },
-    ...reqMessages
+    ...filteredMessages
   ]
 
-  const chatRequestOpts: CreateChatCompletionRequest = {
-    model: 'gpt-3.5-turbo',
-    messages,
-    temperature: 0.1
-  }
-
-  console.log(messages)
-  console.log(chatRequestOpts)
-
-  const chatResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-			headers: {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				Authorization: `Bearer ${process.env.OPENAI_KEY}`,
-				'Content-Type': 'application/json'
-			},
-			method: 'POST',
-			body: JSON.stringify(chatRequestOpts)
-		})
-
-  const answer = await chatResponse.json()
-
-  console.log(answer)
-  res.status(200).json(answer.choices[0].message)
+  const apiKey = process.env.OPENAI_KEY || '';
+  
+  const stream: ReadableStream = await OpenAIStream(apiKey, {
+    model: "gpt-3.5-turbo",
+    messages: sendMessages,
+    temperature: 0.1,
+    max_tokens: 500
+    }
+  );
+  
+  return new Response(stream);
 }
+
+export const config = {
+  runtime: "edge"
+};
