@@ -94,7 +94,7 @@ export default function Home() {
             Powered by gpt-3.5-turbo
           </h6>
         </div>
-        <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
+        <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800 p-2">
           <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
             <ChatMessage
               id="0"

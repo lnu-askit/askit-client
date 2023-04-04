@@ -8,7 +8,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
   const [input, setInput] = useState('');
 
   return (
-    <div className="h-auto w-full place-self-end bg-slate-700">
+    <div className="w-full rounded-md bg-slate-100">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -16,17 +16,17 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
           setInput('');
         }}
       >
-        <div className="no-wrap flex p-2">
+        <div className="flex-no-wrap flex w-full gap-2 p-2">
           <textarea
             tabIndex={0}
-            className="normal-whitespace h-20 w-full max-w-full grow resize-none break-words rounded-md bg-slate-100 p-2 outline-none"
+            className="normal-whitespace h-16 grow resize-none break-words bg-slate-100 outline-none"
             name="message"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             required
           />
-          <button className="ml-2 h-10 shrink-0 grow-0 rounded-md bg-gray-500 pl-3 pr-3">
-            SEND
+          <button className="h-10 shrink-0 self-center rounded-md bg-slate-600 p-1 text-slate-200">
+            send
           </button>
         </div>
       </form>

@@ -9,8 +9,10 @@ export default function Context() {
   };
   return (
     <>
-      <p>{context}</p>
-      <MessageInput onSend={handleNewContext} />
+      <div className="h-screen bg-slate-700">
+        <p>{context}</p>
+        <MessageInput onSend={handleNewContext} />
+      </div>
     </>
   );
 }
