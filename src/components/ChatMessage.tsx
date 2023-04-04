@@ -1,14 +1,14 @@
-import Image from "next/image";
-import avatar from "public/astro.png";
+import Image from 'next/image';
+import avatar from 'public/astro.png';
 
 type chatProps = { id: string; role: string; content: string };
 
 export const ChatMessage = (props: chatProps) => {
   const { id, role, content } = props;
 
-  if (role != "user") {
+  if (role != 'user') {
     return (
-      <div id={"message-" + String(id)}>
+      <div id={'message-' + String(id)}>
         <div className="flex w-full flex-nowrap justify-start">
           <div className="order-0 mr-2 h-10 w-10 shrink-0 grow-0 self-end rounded-md">
             <Image
@@ -28,7 +28,7 @@ export const ChatMessage = (props: chatProps) => {
     );
   } else {
     return (
-      <div id={"message-" + String(id)}>
+      <div id={'message-' + String(id)}>
         <div className="flex w-full flex-nowrap justify-end">
           <div className="order-1 ml-2 h-10 w-10 shrink-0 grow-0 self-end rounded-md">
             <Image
