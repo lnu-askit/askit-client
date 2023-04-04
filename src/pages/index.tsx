@@ -5,6 +5,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
+import { MessageInput } from '~/components/MessageInput';
 
 export interface ChatMessageProps {
   id: string;
@@ -14,10 +15,10 @@ export interface ChatMessageProps {
 }
 
 export default function Home() {
-  const [context, setContext] = useState('');
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
 
-  async function handleNewMessage(role: string, content: string) {
+  async function handleNewMessage(content: string) {
+    const role = 'user';
     const sendMessages = [
       ...messages,
       { id: Math.random().toString(36).substring(2, 15), role, content },
@@ -105,44 +106,9 @@ export default function Home() {
             ))}
           </div>
 
-          <MessageInput content={'input'} onSend={handleNewMessage} />
+          <MessageInput onSend={handleNewMessage} />
         </div>
       </main>
     </>
-  );
-}
-
-type MessageInputProps = {
-  content: string;
-  onSend: (role: string, content: string) => void;
-};
-
-export function MessageInput({ onSend }: MessageInputProps) {
-  const [input, setInput] = useState('');
-
-  return (
-    <div className="h-auto w-full place-self-end bg-slate-700">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSend('user', input);
-          setInput('');
-        }}
-      >
-        <div className="no-wrap flex p-2">
-          <textarea
-            tabIndex={0}
-            className="normal-whitespace h-20 w-full max-w-full grow resize-none break-words rounded-md bg-slate-100 p-2 outline-none"
-            name="message"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            required
-          />
-          <button className="ml-2 h-10 shrink-0 grow-0 rounded-md bg-gray-500 pl-3 pr-3">
-            SEND
-          </button>
-        </div>
-      </form>
-    </div>
   );
 }
