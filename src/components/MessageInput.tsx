@@ -8,7 +8,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
   const [input, setInput] = useState('');
 
   return (
-    <div className="w-full rounded-md bg-slate-100">
+    <div className="h-max w-full rounded-md bg-slate-100">
       <form
         onSubmit={(e) => {
           e.preventDefault();
