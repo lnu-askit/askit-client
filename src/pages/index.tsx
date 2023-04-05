@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable max-len */
-import Head from "next/head";
-import { useState } from "react";
-import ChatMessage from "~/components/ChatMessage";
+
+import Head from 'next/head';
+import { useState } from 'react';
+import { ChatMessage } from '~/components/ChatMessage';
+import { MessageInput } from '~/components/MessageInput';
 
 export interface ChatMessageProps {
   id: string;
@@ -17,9 +17,13 @@ export interface ChatMessageProps {
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
 
-  async function handleNewMessage(role: string, content: string) {
-    const sendMessages = [...messages, { id: Math.random().toString(36).substring(2, 15), role, content }]
-    setMessages(sendMessages)
+  async function handleNewMessage(content: string) {
+    const role = 'user';
+    const sendMessages = [
+      ...messages,
+      { id: Math.random().toString(36).substring(2, 15), role, content },
+    ];
+    setMessages(sendMessages);
 
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -31,8 +35,11 @@ export default function Home() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder('utf-8');
 
-      // const newBotMessage: UiMessage = createUiMessage('assistant', '');
-      const newBotMessage: ChatMessageProps = { id: Math.random().toString(36).substring(2, 15), role: 'assistant', content: '' }
+      const newBotMessage: ChatMessageProps = {
+        id: Math.random().toString(36).substring(2, 15),
+        role: 'assistant',
+        content: '',
+      };
 
       while (true) {
         const { value, done } = await reader.read();
@@ -40,8 +47,6 @@ export default function Home() {
 
         const messageText = decoder.decode(value);
         newBotMessage.content += messageText;
-
-        console.log(messageText)
 
         // there may be a JSON object at the beginning of the message, which contains the model name (streaming workaround)
         if (!newBotMessage.model && newBotMessage.content.startsWith('{')) {
@@ -51,7 +56,9 @@ export default function Home() {
             try {
               const parsed = JSON.parse(json);
               newBotMessage.model = parsed.model;
-              newBotMessage.content = newBotMessage.content.substring(endOfJson + 1);
+              newBotMessage.content = newBotMessage.content.substring(
+                endOfJson + 1
+              );
             } catch (e) {
               // error parsing JSON, ignore
               console.log(e);
@@ -59,9 +66,11 @@ export default function Home() {
           }
         }
 
-        setMessages(list => {
+        setMessages((list) => {
           // find the message to update with new text tokens.
-          const message = list.find(message => message.id === newBotMessage.id);
+          const message = list.find(
+            (message) => message.id === newBotMessage.id
+          );
 
           // update the message with the new text content, re-render the message-list anyway if the message couldn't be found.
           return !message ? [...list, newBotMessage] : [...list];
@@ -85,62 +94,21 @@ export default function Home() {
             Powered by gpt-3.5-turbo
           </h6>
         </div>
-        <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800">
+        <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800 p-2">
           <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
             <ChatMessage
-              id='0'
+              id="0"
               role="assistant"
               content="Hejsan! Vad kan jag hjälpa dig med idag?"
             />
             {messages.map(({ id, role, content }) => (
-                <ChatMessage
-                  key={id}
-                  id={id}
-                  role={role}
-                  content={content}
-                  />
+              <ChatMessage key={id} id={id} role={role} content={content} />
             ))}
           </div>
 
-          <MessageInput content={'input'} onSend={handleNewMessage} />
+          <MessageInput onSend={handleNewMessage} />
         </div>
       </main>
     </>
-  );
-}
-
-
-type MessageInputProps = {
-  content: string;
-  onSend: (role: string, content: string) => void;
-};
-
-export function MessageInput({ onSend }: MessageInputProps) {
-  const [input, setInput] = useState('');
-
-  return (
-    <div className="h-auto w-full place-self-end bg-slate-700">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSend( "user", input );
-          setInput('')
-        }}
-      >
-        <div className="no-wrap flex p-2">
-          <textarea
-            tabIndex={0}
-            className="normal-whitespace h-20 w-full max-w-full grow resize-none break-words rounded-md bg-slate-100 p-2 outline-none"
-            name="message"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            required
-          />
-          <button className="ml-2 h-10 shrink-0 grow-0 rounded-md bg-gray-500 pl-3 pr-3">
-            SEND
-          </button>
-        </div>
-      </form>
-    </div>
   );
 }

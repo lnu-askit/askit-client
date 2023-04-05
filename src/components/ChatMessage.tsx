@@ -1,20 +1,14 @@
-import Image from "next/image";
-import avatar from "public/astro.png";
+import Image from 'next/image';
+import avatar from 'public/astro.png';
 
-export default function ChatMessage({
-  id,
-  role,
-  content
-}: {
-  id: string;
-  role: string;
-  content: string;
-}) {
-  const userRole = role === "user" ? 1 : 0;
+type chatProps = { id: string; role: string; content: string };
 
-  if (userRole === 0) {
+export const ChatMessage = (props: chatProps) => {
+  const { id, role, content } = props;
+
+  if (role != 'user') {
     return (
-      <div id={"message-" + String(id)}>
+      <div id={'message-' + String(id)}>
         <div className="flex w-full flex-nowrap justify-start">
           <div className="order-0 mr-2 h-10 w-10 shrink-0 grow-0 self-end rounded-md">
             <Image
@@ -34,7 +28,7 @@ export default function ChatMessage({
     );
   } else {
     return (
-      <div id={"message-" + String(id)}>
+      <div id={'message-' + String(id)}>
         <div className="flex w-full flex-nowrap justify-end">
           <div className="order-1 ml-2 h-10 w-10 shrink-0 grow-0 self-end rounded-md">
             <Image
@@ -53,4 +47,4 @@ export default function ChatMessage({
       </div>
     );
   }
-}
+};
