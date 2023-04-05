@@ -85,15 +85,15 @@ export default function Home() {
       </Head>
 
       <PageLayout>
-        <div className="relative h-full bg-slate-700">
-          <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-800 scrollbar-thumb-rounded-lg">
+        <div className="relative h-full bg-zinc-700">
+          <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-800 scrollbar-thumb-rounded-lg">
             {messages.map(({ id, role, content }) => (
               <ChatMessage key={id} id={id} role={role} content={content} />
             ))}
             <div className="m-20"></div>
           </div>
 
-          <div className="absolute bottom-0 left-0 w-full bg-slate-700 p-4">
+          <div className="absolute bottom-0 left-0 w-full border-t border-zinc-500 bg-zinc-700 p-4">
             <MessageInput onSend={handleNewMessage} />
           </div>
         </div>
