@@ -9,7 +9,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
   const [input, setInput] = useState('');
 
   return (
-    <div className="h-max w-full rounded-md bg-slate-100">
+    <div className="h-max w-full rounded-md bg-slate-100 shadow-lg">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -31,7 +31,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
             }}
             required
           />
-          <button className="absolute bottom-2 right-2.5 rounded-md p-1 text-slate-500 hover:bg-slate-700">
+          <button className="absolute bottom-2 right-2.5 rounded-md p-1 text-slate-500 focus:bg-slate-700 focus:outline-none hover:bg-slate-700">
             <svg
               stroke="currentColor"
               fill="none"
