@@ -6,6 +6,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
+import { PageLayout } from '~/components/layout';
 
 export interface ChatMessageProps {
   id: string;
@@ -16,6 +17,7 @@ export interface ChatMessageProps {
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
+  const model = process.env.NEXT_PUBLIC_GPT_MODEL;
 
   async function handleNewMessage(content: string) {
     const role = 'user';
@@ -56,9 +58,7 @@ export default function Home() {
             try {
               const parsed = JSON.parse(json);
               newBotMessage.model = parsed.model;
-              newBotMessage.content = newBotMessage.content.substring(
-                endOfJson + 1
-              );
+              newBotMessage.content = newBotMessage.content.substring(endOfJson + 1);
             } catch (e) {
               // error parsing JSON, ignore
               console.log(e);
@@ -68,9 +68,7 @@ export default function Home() {
 
         setMessages((list) => {
           // find the message to update with new text tokens.
-          const message = list.find(
-            (message) => message.id === newBotMessage.id
-          );
+          const message = list.find((message) => message.id === newBotMessage.id);
 
           // update the message with the new text content, re-render the message-list anyway if the message couldn't be found.
           return !message ? [...list, newBotMessage] : [...list];
@@ -87,28 +85,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="flex h-full w-full flex-col items-center gap-2 px-8 pt-4">
-          <h1 className="self-center font-black text-white">AskIT</h1>
-          <h6 className="self-center italic text-white">
-            Powered by gpt-3.5-turbo
-          </h6>
-        </div>
-        <div className="h-full w-[700px] min-w-max max-w-[800px] shrink justify-end rounded-md border-2 border-solid border-gray-500 bg-slate-800 p-2">
-          <div className="flex h-[500px] flex-col gap-4 overflow-y-auto p-4">
-            <ChatMessage
-              id="0"
-              role="assistant"
-              content="Hejsan! Vad kan jag hjälpa dig med idag?"
-            />
+      <PageLayout>
+        <div className="relative h-full bg-slate-700">
+          <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
+            <div className="w-full flex-nowrap border-b border-slate-800 bg-slate-600 p-2 text-center text-slate-200">
+              Model: {model}
+            </div>
             {messages.map(({ id, role, content }) => (
               <ChatMessage key={id} id={id} role={role} content={content} />
             ))}
+            <div className="m-20"></div>
           </div>
 
-          <MessageInput onSend={handleNewMessage} />
+          <div className="absolute bottom-0 w-full bg-slate-700 p-4 px-20">
+            <MessageInput onSend={handleNewMessage} />
+          </div>
         </div>
-      </main>
+      </PageLayout>
     </>
   );
 }
