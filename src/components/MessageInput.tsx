@@ -9,7 +9,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
   const [input, setInput] = useState('');
 
   return (
-    <div className="h-max w-full rounded-md bg-zinc-100 shadow-lg">
+    <div className="h-max w-full rounded-md bg-slate-100 shadow-lg">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -17,12 +17,12 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
           setInput('');
         }}
       >
-        <div className="relative flex max-h-[120px] w-full flex-grow grow flex-col rounded-md bg-zinc-100 py-0.5">
+        <div className="relative flex max-h-[120px] w-full flex-grow grow flex-col rounded-md bg-slate-100 py-0.5">
           <TextareaAutosize
             tabIndex={0}
             minRows={1}
             maxRows={4}
-            className="normal-whitespace h-auto w-full resize-none break-words bg-transparent p-2 pr-8 outline-none scrollbar-thin scrollbar-thumb-zinc-600 scrollbar-thumb-rounded-lg"
+            className="normal-whitespace h-auto w-full resize-none break-words bg-transparent p-2 pr-8 outline-none scrollbar-thin scrollbar-thumb-slate-600 scrollbar-thumb-rounded-lg"
             name="message"
             placeholder="Send a message..."
             value={input}
@@ -31,7 +31,7 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
             }}
             required
           />
-          <button className="absolute bottom-2 right-2.5 rounded-md p-1 text-zinc-500 focus:bg-zinc-700 focus:outline-none hover:bg-zinc-700">
+          <button className="absolute bottom-2 right-2.5 rounded-md p-1 text-slate-500 focus:bg-slate-700 focus:outline-none hover:bg-slate-700">
             <svg
               stroke="currentColor"
               fill="none"
