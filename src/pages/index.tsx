@@ -8,15 +8,17 @@ import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
 import { PageLayout } from '~/components/layout';
 
-export interface ChatMessageProps {
+export type ChatMessageProps = {
   id: string;
   role: string;
   content: string;
   model?: string;
-}
+};
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
+  const [context, setContext] = useState('');
+
   const model = process.env.NEXT_PUBLIC_GPT_MODEL;
 
   async function handleNewMessage(content: string) {
@@ -30,7 +32,7 @@ export default function Home() {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: sendMessages }),
+      body: JSON.stringify({ context: context, chatMessages: sendMessages }),
     });
 
     if (response.body) {
