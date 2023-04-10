@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
 import { AdminPageLayout } from '~/components/adminLayout';
+import TextareaAutosize from 'react-textarea-autosize';
+import { dummySystem, dummyContext } from 'utils/dummyContent';
 
 export type ChatMessageProps = {
   id: string;
@@ -17,13 +19,10 @@ export type ChatMessageProps = {
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
-  const [context, setContext] = useState('');
+  const [system, setSystem] = useState(dummySystem);
+  const [context, setContext] = useState(dummyContext);
 
   const model = process.env.NEXT_PUBLIC_GPT_MODEL;
-
-  function handleNewContext(content: string) {
-    setContext(content);
-  }
 
   async function handleNewMessage(content: string) {
     const role = 'user';
@@ -36,7 +35,7 @@ export default function Home() {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ context: context, chatMessages: sendMessages }),
+      body: JSON.stringify({ system: system, context: context, chatMessages: sendMessages }),
     });
 
     if (response.body) {
@@ -92,8 +91,39 @@ export default function Home() {
       </Head>
 
       <AdminPageLayout>
-        <div className="w-[400px]">
-          <MessageInput onSend={handleNewContext} />
+        <div className="flex w-1/3 flex-col justify-evenly gap-2 overflow-hidden p-2">
+          <div className="mr-2 h-auto w-full overflow-y-auto rounded-md border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
+              System Message
+            </div>
+            <TextareaAutosize
+              minRows={11}
+              maxRows={11}
+              className="normal-whitespace h-full w-full resize-none break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+              name="system"
+              placeholder="Set system message..."
+              value={system}
+              onChange={(e) => {
+                setSystem(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="mr-2 h-auto w-full overflow-y-auto rounded-md border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">Context</div>
+            <TextareaAutosize
+              minRows={11}
+              maxRows={11}
+              className="normal-whitespace h-full w-full resize-none break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+              name="context"
+              placeholder="Set context..."
+              value={context}
+              onChange={(e) => {
+                setContext(e.target.value);
+              }}
+              required
+            />
+          </div>
         </div>
         <div className="relative h-full w-full bg-slate-700">
           <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
