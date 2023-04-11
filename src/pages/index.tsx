@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
 import { PageLayout } from '~/components/layout';
+import { dummyContext, dummySystem } from 'utils/dummyContent';
 
 export type ChatMessageProps = {
   id: string;
@@ -17,7 +18,6 @@ export type ChatMessageProps = {
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
-  const [context, setContext] = useState('');
 
   const model = process.env.NEXT_PUBLIC_GPT_MODEL;
 
@@ -32,7 +32,11 @@ export default function Home() {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ context: context, chatMessages: sendMessages }),
+      body: JSON.stringify({
+        system: dummySystem,
+        context: dummyContext,
+        chatMessages: sendMessages,
+      }),
     });
 
     if (response.body) {
@@ -90,6 +94,9 @@ export default function Home() {
       <PageLayout>
         <div className="relative h-full bg-slate-700">
           <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
+            <div className="w-full flex-nowrap border-b border-slate-800 bg-slate-600 p-2 text-center text-slate-200">
+              AskIT
+            </div>
             {messages.map(({ id, role, content }) => (
               <ChatMessage key={id} id={id} role={role} content={content} />
             ))}
