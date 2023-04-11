@@ -19,8 +19,6 @@ export type ChatMessageProps = {
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
 
-  const model = process.env.NEXT_PUBLIC_GPT_MODEL;
-
   async function handleNewMessage(content: string) {
     const role = 'user';
     const sendMessages = [
