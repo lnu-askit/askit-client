@@ -91,15 +91,14 @@ export default function Home() {
       </Head>
 
       <AdminPageLayout>
-        <div className="flex w-1/3 flex-col justify-evenly gap-2 overflow-hidden p-2">
-          <div className="mr-2 h-auto w-full overflow-y-auto rounded-md border border-slate-800 bg-slate-700 text-slate-200">
+        <div className="flex h-full w-1/3 flex-col justify-evenly gap-2 overflow-hidden p-2">
+          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
             <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
               System Message
             </div>
-            <TextareaAutosize
-              minRows={11}
-              maxRows={11}
-              className="normal-whitespace h-full w-full resize-none break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+
+            <textarea
+              className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
               name="system"
               placeholder="Set system message..."
               value={system}
@@ -109,12 +108,10 @@ export default function Home() {
               required
             />
           </div>
-          <div className="mr-2 h-auto w-full overflow-y-auto rounded-md border border-slate-800 bg-slate-700 text-slate-200">
+          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
             <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">Context</div>
-            <TextareaAutosize
-              minRows={11}
-              maxRows={11}
-              className="normal-whitespace h-full w-full resize-none break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+            <textarea
+              className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
               name="context"
               placeholder="Set context..."
               value={context}
