@@ -133,7 +133,7 @@ export default function Home() {
             <div className="m-20"></div>
           </div>
 
-          <div className="absolute bottom-0 w-full bg-slate-700 p-4 px-20">
+          <div className="from-10% via-50% to-90% absolute bottom-0 w-full bg-gradient-to-t from-slate-700 via-slate-700 py-10 px-20">
             <MessageInput onSend={handleNewMessage} />
           </div>
         </div>
