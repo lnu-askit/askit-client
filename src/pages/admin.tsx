@@ -6,8 +6,9 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
-import { PageLayout } from '~/components/layout';
-import { dummyContext, dummySystem } from 'utils/dummyContent';
+import { AdminPageLayout } from '~/components/adminLayout';
+import TextareaAutosize from 'react-textarea-autosize';
+import { dummySystem, dummyContext } from 'utils/dummyContent';
 
 export type ChatMessageProps = {
   id: string;
@@ -18,6 +19,10 @@ export type ChatMessageProps = {
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
+  const [system, setSystem] = useState(dummySystem);
+  const [context, setContext] = useState(dummyContext);
+
+  const model = process.env.NEXT_PUBLIC_GPT_MODEL;
 
   async function handleNewMessage(content: string) {
     const role = 'user';
@@ -30,11 +35,7 @@ export default function Home() {
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        system: dummySystem,
-        context: dummyContext,
-        chatMessages: sendMessages,
-      }),
+      body: JSON.stringify({ system: system, context: context, chatMessages: sendMessages }),
     });
 
     if (response.body) {
@@ -89,11 +90,42 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <PageLayout>
-        <div className="relative h-full bg-slate-700">
+      <AdminPageLayout>
+        <div className="flex h-full w-1/3 flex-col justify-evenly gap-2 overflow-hidden p-2">
+          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
+              System Message
+            </div>
+
+            <textarea
+              className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+              name="system"
+              placeholder="Set system message..."
+              value={system}
+              onChange={(e) => {
+                setSystem(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">Context</div>
+            <textarea
+              className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
+              name="context"
+              placeholder="Set context..."
+              value={context}
+              onChange={(e) => {
+                setContext(e.target.value);
+              }}
+              required
+            />
+          </div>
+        </div>
+        <div className="relative h-full w-full bg-slate-700">
           <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
             <div className="w-full flex-nowrap border-b border-slate-800 bg-slate-600 p-2 text-center text-slate-200">
-              AskIT
+              Model: {model}
             </div>
             {messages.map(({ id, role, content }) => (
               <ChatMessage key={id} id={id} role={role} content={content} />
@@ -101,11 +133,11 @@ export default function Home() {
             <div className="m-20"></div>
           </div>
 
-          <div className="absolute bottom-0 w-full bg-slate-700 p-4 px-20">
+          <div className="from-10% via-50% to-90% absolute bottom-0 w-full bg-gradient-to-t from-slate-700 via-slate-700 py-10 px-20">
             <MessageInput onSend={handleNewMessage} />
           </div>
         </div>
-      </PageLayout>
+      </AdminPageLayout>
     </>
   );
 }
