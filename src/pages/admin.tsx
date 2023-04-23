@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
 import { AdminPageLayout } from '~/components/adminLayout';
-import TextareaAutosize from 'react-textarea-autosize';
 import { dummySystem, dummyContext } from 'utils/dummyContent';
 
 export type ChatMessageProps = {
@@ -20,9 +19,13 @@ export type ChatMessageProps = {
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessageProps[]>([]);
   const [system, setSystem] = useState(dummySystem);
-  const [context, setContext] = useState(dummyContext);
+  const [context, setContext] = useState('');
 
   const model = process.env.NEXT_PUBLIC_GPT_MODEL;
+
+  function handleNewContext() {
+    setContext(dummyContext);
+  }
 
   async function handleNewMessage(content: string) {
     const role = 'user';
@@ -31,6 +34,10 @@ export default function Home() {
       { id: Math.random().toString(36).substring(2, 15), role, content },
     ];
     setMessages(sendMessages);
+
+    if (context === '') {
+      handleNewContext();
+    }
 
     const response = await fetch('/api/chat', {
       method: 'POST',
