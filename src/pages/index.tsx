@@ -7,7 +7,8 @@ import { useState } from 'react';
 import { ChatMessage } from '~/components/ChatMessage';
 import { MessageInput } from '~/components/MessageInput';
 import { PageLayout } from '~/components/layout';
-import { dummyContext, dummySystem } from 'utils/dummyContent';
+import { dummyContext, dummyInstructions, dummySystem } from 'utils/dummyContent';
+import { InstructionsCard } from '~/components/InstructionsCard';
 
 export type ChatMessageProps = {
   id: string;
@@ -100,6 +101,8 @@ export default function Home() {
 
       <PageLayout>
         <div className="relative h-full bg-slate-700">
+          {context === '' && <InstructionsCard message={dummyInstructions()} />}
+
           <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
             <div className="w-full flex-nowrap border-b border-slate-800 bg-slate-600 p-2 text-center text-slate-200">
               AskIT
@@ -110,17 +113,9 @@ export default function Home() {
             <div className="m-20"></div>
           </div>
 
-          {context === '' && (
-            <div className="from-10% via-50% to-90% absolute bottom-0 w-full bg-gradient-to-t from-slate-700 via-slate-700 py-10 px-20">
-              <MessageInput onSend={handleNewContext} />
-            </div>
-          )}
-
-          {context != '' && (
-            <div className="from-10% via-50% to-90% absolute bottom-0 w-full bg-gradient-to-t from-slate-700 via-slate-700 py-10 px-20">
-              <MessageInput onSend={handleNewMessage} />
-            </div>
-          )}
+          <div className="from-10% via-50% to-90% absolute bottom-0 w-full bg-gradient-to-t from-slate-700 via-slate-700 py-10 px-20">
+            <MessageInput onSend={handleNewMessage} />
+          </div>
         </div>
       </PageLayout>
     </>
