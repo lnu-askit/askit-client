@@ -13,13 +13,13 @@ type ChatApiInput = {
   chatMessages: ChatMessageProps[];
 };
 
-export default async function chat(req: NextRequest) {
+export default async function chat (req: NextRequest) {
   const { system, context, chatMessages } = (await req.json()) as ChatApiInput;
 
   const systemMessage = formatSystemMessage(system, context);
   const formattedMessages = formatMessages(systemMessage, chatMessages);
 
-  const apiKey = process.env.OPENAI_KEY || '';
+  const apiKey = process.env.OPENAI_API_KEY || '';
   const stream: ReadableStream = await OpenAIStream(apiKey, {
     model: 'gpt-3.5-turbo',
     messages: formattedMessages,
