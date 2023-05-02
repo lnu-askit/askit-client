@@ -15,16 +15,16 @@ export default async function retrieval (req: NextApiRequest, res: NextApiRespon
       'x-scraper-key': `${process.env.SCRAPER_KEY}`,
     },
     body: JSON.stringify({
-      history: "",
-      currentQuery: query
+      currentQuery: query,
+      maxTokens: 1500
     })
   })
 
   const json = await response.json()
   let result = ""
   for (let i = 0; i < json.context.length; i++) {
-    result += json.context[i].information
-    result += "url: " + json.context[i].url
+    result += "\n" + json.context[i].information
+    result += " url: " + json.context[i].url
   }
 
   res.status(200).json(result)
