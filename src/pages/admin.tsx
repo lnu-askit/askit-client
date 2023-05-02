@@ -112,19 +112,6 @@ export default function Home() {
 
       <AdminPageLayout>
         <div className="flex h-full w-1/3 flex-col justify-evenly gap-1 overflow-hidden p-1 text-slate-200">
-          <div className="mr-2 flex h-auto w-full flex-col rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
-              API Management
-            </div>
-            <div className="flex w-full gap-2 p-1">
-              <button className="w-full rounded-md border border-slate-800 bg-slate-600 p-1">
-                Start Scraper
-              </button>
-              <button className="w-full rounded-md border border-slate-800 bg-slate-600 p-1">
-                Upload Content
-              </button>
-            </div>
-          </div>
           <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
             <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
               System Message
