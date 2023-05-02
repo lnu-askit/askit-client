@@ -7,7 +7,7 @@ import { z } from 'zod'
 const server = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   OPENAI_API_KEY: z.string().nonempty(),
-  BEARER_TOKEN: z.string().nonempty(),
+  SCRAPER_KEY: z.string().nonempty(),
 })
 
 /**
@@ -29,7 +29,7 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   NEXT_PUBLIC_GPT_MODEL: process.env.NEXT_PUBLIC_GPT_MODEL,
-  BEARER_TOKEN: process.env.BEARER_TOKEN,
+  SCRAPER_KEY: process.env.SCRAPER_KEY
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 }
 
@@ -59,7 +59,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   }
 
   env = new Proxy(parsed.data, {
-    get(target, prop) {
+    get (target, prop) {
       if (typeof prop !== 'string') return undefined
       // Throw a descriptive error if a server-side env var is accessed on the client
       // Otherwise it would just be returning `undefined` and be annoying to debug
@@ -75,3 +75,4 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
 }
 
 export { env }
+
