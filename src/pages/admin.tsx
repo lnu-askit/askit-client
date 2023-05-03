@@ -8,6 +8,7 @@ import { ChatMessage } from '~/components/ChatMessage'
 import { MessageInput } from '~/components/MessageInput'
 import { AdminPageLayout } from '~/components/adminLayout'
 import { dummySystem } from 'utils/dummyContent'
+import { SidebarCard } from '~/components/SidebarCard'
 
 export type ChatMessageProps = {
   id: string
@@ -112,11 +113,7 @@ export default function Home() {
 
       <AdminPageLayout>
         <div className="flex h-full w-1/3 flex-col justify-evenly gap-1 overflow-hidden p-1 text-slate-200">
-          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
-              System Message
-            </div>
-
+          <SidebarCard title="System Message">
             <textarea
               className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
               name="system"
@@ -127,9 +124,9 @@ export default function Home() {
               }}
               required
             />
-          </div>
-          <div className="mr-2 flex h-full w-full flex-col overflow-y-hidden rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">Context</div>
+          </SidebarCard>
+
+          <SidebarCard title="Context">
             <textarea
               disabled
               className="normal-whitespace h-full w-full resize-none overflow-y-auto break-words bg-transparent p-4 text-sm text-slate-200 outline-none scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg"
@@ -141,7 +138,7 @@ export default function Home() {
               }}
               required
             />
-          </div>
+          </SidebarCard>
         </div>
         <div className="relative h-full w-full bg-slate-700">
           <div className="flex h-full flex-col overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">

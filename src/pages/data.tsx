@@ -6,6 +6,8 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { AdminPageLayout } from '~/components/adminLayout'
 import { dummyData } from 'utils/dummyContent'
+import { ArticleCard } from '~/components/ArticleCard'
+import { SidebarCard } from '~/components/SidebarCard'
 
 export type InfoblobProps = {
   title: string
@@ -38,11 +40,7 @@ export default function Home() {
       </Head>
       <AdminPageLayout>
         <div className="flex h-full w-1/3 flex-col gap-1 overflow-hidden p-1 text-slate-200">
-          <div className="mr-2 flex h-auto w-full flex-col items-center rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="w-full border-b border-slate-800 bg-slate-600 p-2 text-center">
-              Service Portal Scraper
-            </div>
-
+          <SidebarCard title="Service Portal Scraper">
             <div className="flex w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
               <span>
                 <span className="font-bold text-red-500">Warning! </span>Running the scraper with a
@@ -57,16 +55,22 @@ export default function Home() {
                   placeholder="all pages"
                 />
               </div>
+              <div className="flex flex-col">
+                <span className="font-extrabold">API Key (x-api-scraper)</span>
+                <input
+                  className="w-36 rounded-md border border-slate-800 p-1 text-slate-800"
+                  type="text"
+                  placeholder="x-api-scraper key"
+                />
+              </div>
             </div>
 
             <button className="m-1 w-fit shrink grow rounded-lg border border-slate-800 bg-slate-600 py-1 px-2">
               Run Scraper
             </button>
-          </div>
-          <div className="mr-2 flex h-auto w-full flex-col items-center rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="w-full border-b border-slate-800 bg-slate-600 p-2 text-center">
-              Pinecone Index
-            </div>
+          </SidebarCard>
+
+          <SidebarCard title="Pinecone Index">
             <div className="flex w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
               <div className="flex flex-col">
                 <span className="font-extrabold">Index Name</span>
@@ -88,7 +92,7 @@ export default function Home() {
             <button className="m-1 w-fit shrink grow rounded-lg border border-slate-800 bg-slate-600 py-1 px-2">
               Sync Local Content to Pinecone
             </button>
-          </div>
+          </SidebarCard>
         </div>
 
         <div className="flex h-full w-full flex-col bg-slate-700">
@@ -97,21 +101,7 @@ export default function Home() {
           </div>
           <div className="flex w-full flex-wrap justify-evenly gap-2 overflow-y-auto py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
             {localContent.map(({ title, content, url }) => (
-              <div
-                key={title + url}
-                className="normal-whitespace flex h-[300px] w-[300px] resize-none flex-col items-center gap-2 overflow-y-auto rounded-md border border-slate-800 bg-gray-100 bg-transparent p-2 text-justify text-xs outline-none scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 scrollbar-track-rounded-md scrollbar-thumb-rounded-lg"
-              >
-                <div className="w-full border-b border-slate-300 pb-2 text-center font-extrabold">
-                  {title}
-                </div>
-                <a
-                  className="whitespace-nowrap font-semibold decoration-inherit hover:underline"
-                  href={url}
-                >
-                  Source URL
-                </a>
-                <div>{content}</div>
-              </div>
+              <ArticleCard key={title + url} title={title} url={url} content={content} />
             ))}
           </div>
         </div>
