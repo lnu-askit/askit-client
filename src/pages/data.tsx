@@ -13,8 +13,21 @@ export type InfoblobProps = {
   url: string
 }
 
+export type IndexMetadata = {
+  name: string
+  region: string
+  dimensions: number
+  vectors: number
+}
+
 export default function Home() {
-  const [data, setData] = useState<InfoblobProps[]>(dummyData)
+  const [localContent, setLocalContent] = useState<InfoblobProps[]>(dummyData)
+  const [indexMetadata, setIndexMetadata] = useState({
+    name: null,
+    region: null,
+    dimensions: 0,
+    vectors: 0,
+  })
 
   return (
     <>
@@ -25,30 +38,68 @@ export default function Home() {
       </Head>
       <AdminPageLayout>
         <div className="flex h-full w-1/3 flex-col gap-1 overflow-hidden p-1 text-slate-200">
-          <div className="mr-2 flex h-auto w-full flex-col rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
-            <div className="border-b border-slate-800 bg-slate-600 p-2 text-center">
-              API Management
+          <div className="mr-2 flex h-auto w-full flex-col items-center rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="w-full border-b border-slate-800 bg-slate-600 p-2 text-center">
+              Service Portal Scraper
             </div>
-            <div className="flex w-full justify-evenly gap-2 p-1">
-              <button className="w-auto shrink-0 grow rounded-md border border-slate-800 bg-slate-600 p-1">
-                Start Scraper
-              </button>
-              <button className="w-auto shrink-0 grow rounded-md border border-slate-800 bg-slate-600 p-1">
-                Sync with Pinecone
-              </button>
+
+            <div className="flex w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
+              <span>
+                <span className="font-bold text-red-500">Warning! </span>Running the scraper with a
+                high number of pages can take a very long time.
+              </span>
+
+              <div className="flex flex-col">
+                <span className="font-extrabold">Pages</span>
+                <input
+                  className="w-24 rounded-md border border-slate-800 p-1 text-slate-800"
+                  type="number"
+                  placeholder="all pages"
+                />
+              </div>
             </div>
+
+            <button className="m-1 w-fit shrink grow rounded-lg border border-slate-800 bg-slate-600 py-1 px-2">
+              Run Scraper
+            </button>
+          </div>
+          <div className="mr-2 flex h-auto w-full flex-col items-center rounded-sm border border-slate-800 bg-slate-700 text-slate-200">
+            <div className="w-full border-b border-slate-800 bg-slate-600 p-2 text-center">
+              Pinecone Index
+            </div>
+            <div className="flex w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
+              <div className="flex flex-col">
+                <span className="font-extrabold">Index Name</span>
+                <span className="font-semibold">{indexMetadata.name}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-extrabold">Region</span>
+                <span className="font-semibold">{indexMetadata.region}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-extrabold">Dimensions</span>
+                <span className="font-semibold">{indexMetadata.dimensions}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-extrabold">Current Total Vectors (Articles)</span>
+                <span className="font-semibold">{indexMetadata.vectors}</span>
+              </div>
+            </div>
+            <button className="m-1 w-fit shrink grow rounded-lg border border-slate-800 bg-slate-600 py-1 px-2">
+              Sync Local Content to Pinecone
+            </button>
           </div>
         </div>
 
         <div className="flex h-full w-full flex-col bg-slate-700">
           <div className="w-full flex-nowrap border-b border-slate-800 bg-slate-600 p-2 text-center text-slate-200">
-            Scraped Content
+            Local Scraped Content
           </div>
-          <div className="p flex w-full flex-wrap justify-evenly gap-2 overflow-y-auto py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
-            {data.map(({ title, content, url }) => (
+          <div className="flex w-full flex-wrap justify-evenly gap-2 overflow-y-auto py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
+            {localContent.map(({ title, content, url }) => (
               <div
                 key={title + url}
-                className="normal-whitespace flex h-[300px] w-[300px] resize-none flex-col items-center gap-2 overflow-y-auto rounded-md border border-slate-800 bg-slate-200 bg-transparent p-2 text-justify text-xs outline-none scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 scrollbar-track-rounded-md scrollbar-thumb-rounded-lg"
+                className="normal-whitespace flex h-[300px] w-[300px] resize-none flex-col items-center gap-2 overflow-y-auto rounded-md border border-slate-800 bg-gray-100 bg-transparent p-2 text-justify text-xs outline-none scrollbar-thin scrollbar-track-slate-300 scrollbar-thumb-slate-400 scrollbar-track-rounded-md scrollbar-thumb-rounded-lg"
               >
                 <div className="w-full border-b border-slate-300 pb-2 text-center font-extrabold">
                   {title}
