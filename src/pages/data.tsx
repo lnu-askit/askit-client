@@ -1,25 +1,40 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import Head from 'next/head'
-import { useState } from 'react'
 import { AdminPageLayout } from '~/components/adminLayout'
-import { dummyData } from 'utils/dummyContent'
 import { ArticleCard } from '~/components/ArticleCard'
 import { SidebarCard } from '~/components/SidebarCard'
 import { Pinecone } from '~/components/Pinecone'
 import { Scraper } from '~/components/Scraper'
+import type { GetServerSideProps } from 'next'
+
+export type HomeProps = {
+  infoblobs: InfoblobProps[]
+  pinecone: PineconeProps
+}
+
+export type PineconeProps = {
+  name: string
+  region: string
+  dimensions: string
+  vectors: string
+}
 
 export type InfoblobProps = {
   title: string
   content: string
   url: string
 }
-
-export default function Home() {
-  const [localContent, setLocalContent] = useState<InfoblobProps[]>(dummyData)
-
+export default function Home({
+  infoblobs,
+  pinecone,
+}: {
+  infoblobs: InfoblobProps[]
+  pinecone: PineconeProps
+}) {
   return (
     <>
       <Head>
@@ -34,7 +49,12 @@ export default function Home() {
           </SidebarCard>
 
           <SidebarCard title="Pinecone Index">
-            <Pinecone />
+            <Pinecone
+              name={pinecone.name}
+              region={pinecone.region}
+              dimensions={pinecone.dimensions}
+              vectors={pinecone.vectors}
+            />
           </SidebarCard>
         </div>
 
@@ -43,12 +63,47 @@ export default function Home() {
             Local Scraped Content
           </div>
           <div className="flex w-full flex-wrap justify-evenly gap-2 overflow-y-auto py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg">
-            {localContent.map(({ title, content, url }) => (
-              <ArticleCard key={title + url} title={title} url={url} content={content} />
-            ))}
+            {infoblobs &&
+              infoblobs.map(({ title, content, url }) => (
+                <ArticleCard key={title + url} title={title} url={url} content={content} />
+              ))}
           </div>
         </div>
       </AdminPageLayout>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const scraperRes = await fetch('http://localhost:5001/api/data', {
+    headers: {
+      'x-scaper-key': 'keykey',
+    },
+  })
+
+  const pineconeRes = await fetch(
+    `https://${process.env.PINECONE_INDEX}-${process.env.PINECONE_PROJECT_ID}.svc.${process.env.PINECONE_ENVIRONMENT}.pinecone.io/describe_index_stats`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Api-Key': `${process.env.PINECONE_API_KEY}`,
+      },
+    }
+  )
+
+  const pineconeData = await pineconeRes.json()
+  const infoblobs = await scraperRes.json()
+
+  return {
+    props: {
+      infoblobs: infoblobs,
+      pinecone: {
+        name: process.env.PINECONE_INDEX,
+        region: process.env.PINECONE_ENVIRONMENT,
+        dimensions: pineconeData.dimension,
+        vectors: pineconeData.namespaces[''].vectorCount,
+      },
+    },
+  }
 }
