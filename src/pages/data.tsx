@@ -77,7 +77,7 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async () => {
   const scraperRes = await fetch('http://localhost:5001/api/data', {
     headers: {
-      'x-scaper-key': 'keykey',
+      'x-scaper-key': `${process.env.SCRAPER_KEY}`,
     },
   })
 

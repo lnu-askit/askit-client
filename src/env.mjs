@@ -12,6 +12,7 @@ const server = z.object({
   PINECONE_ENVIRONMENT: z.string().nonempty(),
   PINECONE_API_KEY: z.string().nonempty(),
   PINECONE_PROJECT_ID: z.string().nonempty(),
+  SCRAPER_KEY: z.string().nonempty(),
 })
 
 /**
@@ -38,6 +39,7 @@ const processEnv = {
   PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
   PINECONE_API_KEY: process.env.PINECONE_API_KEY,
   PINECONE_PROJECT_ID: process.env.PINECONE_PROJECT_ID,
+  SCRAPER_KEY: process.env.SCRAPER_KEY,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 }
 
