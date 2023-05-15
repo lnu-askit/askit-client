@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
+import { useState } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 
 type MessageInputProps = {
-  onSend: (content: string) => void;
-};
+  onSend: (content: string) => void
+}
 
 export const MessageInput = ({ onSend }: MessageInputProps) => {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState('')
 
   return (
     <div className="h-max w-full rounded-md border border-slate-800 bg-slate-600 shadow-lg">
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          onSend(input.trim());
-          setInput('');
+          e.preventDefault()
+          onSend(input.trim())
+          setInput('')
         }}
       >
-        <div className="relative flex max-h-[120px] w-full flex-grow grow flex-col rounded-md bg-transparent py-0.5">
+        <div className="relative flex max-h-[120px] w-full grow flex-col rounded-md bg-transparent py-0.5">
           <TextareaAutosize
             tabIndex={0}
             minRows={1}
@@ -27,7 +27,16 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
             placeholder="Send a message..."
             value={input}
             onChange={(e) => {
-              setInput(e.target.value);
+              setInput(e.target.value)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault()
+                if (input !== '') {
+                  onSend(input.trim())
+                  setInput('')
+                }
+              }
             }}
             required
           />
@@ -49,5 +58,5 @@ export const MessageInput = ({ onSend }: MessageInputProps) => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}

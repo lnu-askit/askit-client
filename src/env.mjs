@@ -39,7 +39,7 @@ const processEnv = {
   PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
   PINECONE_API_KEY: process.env.PINECONE_API_KEY,
   PINECONE_PROJECT_ID: process.env.PINECONE_PROJECT_ID,
-  SCRAPER_KEY: process.env.SCRAPER_KEY,
+  SCRAPER_KEY: process.env.SCRAPER_KEY
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 }
 
@@ -69,7 +69,7 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
   }
 
   env = new Proxy(parsed.data, {
-    get(target, prop) {
+    get (target, prop) {
       if (typeof prop !== 'string') return undefined
       // Throw a descriptive error if a server-side env var is accessed on the client
       // Otherwise it would just be returning `undefined` and be annoying to debug
@@ -85,3 +85,4 @@ if (!!process.env.SKIP_ENV_VALIDATION == false) {
 }
 
 export { env }
+

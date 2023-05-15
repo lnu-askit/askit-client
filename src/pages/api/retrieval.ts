@@ -1,35 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import type { RetrievalQueryResponse } from '~/types/retrievalQueryResponse'
 
 type RetrievalApiInput = {
   query: string
 }
 
-export default async function retrieval(req: NextApiRequest, res: NextApiResponse) {
+export default async function retrieval (req: NextApiRequest, res: NextApiResponse) {
   const { query } = (await req.body) as RetrievalApiInput
 
-  const response = await fetch('http://retrieval-plugin:8080/query', {
+  const response = await fetch('http://api-and-scraper:8080/api/get-context', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      Authorization: `Bearer ${process.env.BEARER_TOKEN}`,
+      'x-scraper-key': `${process.env.SCRAPER_KEY}`,
     },
     body: JSON.stringify({
-      queries: [
-        {
-          query: query,
-          filter: {
-            source: 'email',
-          },
-          top_k: 3,
-        },
-      ],
-    }),
+      currentQuery: query,
+      maxTokens: 1500
+    })
   })
 
-  const json = (await response.json()) as RetrievalQueryResponse
-  const topResult = json?.results[0]?.results[0]?.text
+  const json = await response.json()
+  let result = ""
+  for (let i = 0; i < json.context.length; i++) {
+    result += "\n" + json.context[i].information
+    result += " url: " + json.context[i].url
+  }
 
-  res.status(200).json(topResult)
+  res.status(200).json(result)
 }
