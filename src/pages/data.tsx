@@ -94,10 +94,9 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const infoblobs = null
+  let infoblobs = null
   let pinecone = null
 
-  /*
   const scraperRes = await fetch('http://api-and-scraper:8080/api/data', {
     method: 'GET',
     headers: {
@@ -106,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   })
 
   infoblobs = await scraperRes.json()
-  */
+
   try {
     const pineconeRes = await fetch(
       `https://${process.env.PINECONE_INDEX}-${process.env.PINECONE_PROJECT_ID}.svc.${process.env.PINECONE_ENVIRONMENT}.pinecone.io/describe_index_stats`,
