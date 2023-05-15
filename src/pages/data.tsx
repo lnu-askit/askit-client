@@ -35,6 +35,18 @@ export default function Home({
   infoblobs: InfoblobProps[]
   pinecone: PineconeProps
 }) {
+
+  async function runScraper(pages: number, key: string) {
+    await fetch('/api/scraper', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pages: pages,
+        key: key,
+      }),
+    })
+  }
+
   return (
     <>
       <Head>
@@ -45,7 +57,7 @@ export default function Home({
       <AdminPageLayout>
         <div className="flex h-full w-1/3 flex-col gap-1 overflow-hidden p-1 text-slate-200">
           <SidebarCard title="Service Portal Scraper">
-            <Scraper />
+            <Scraper onRun={runScraper}/>
           </SidebarCard>
 
           <SidebarCard title="Pinecone Index">
@@ -79,6 +91,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   let pinecone = null
 
   const scraperRes = await fetch('http://api-and-scraper:8080/api/data', {
+    method: 'GET',
     headers: {
       'x-scaper-key': `${process.env.SCRAPER_KEY}`,
     },
