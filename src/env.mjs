@@ -7,6 +7,11 @@ import { z } from 'zod'
 const server = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']),
   OPENAI_API_KEY: z.string().nonempty(),
+  BEARER_TOKEN: z.string().nonempty(),
+  PINECONE_INDEX: z.string().nonempty(),
+  PINECONE_ENVIRONMENT: z.string().nonempty(),
+  PINECONE_API_KEY: z.string().nonempty(),
+  PINECONE_PROJECT_ID: z.string().nonempty(),
   SCRAPER_KEY: z.string().nonempty(),
 })
 
@@ -29,6 +34,11 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   NEXT_PUBLIC_GPT_MODEL: process.env.NEXT_PUBLIC_GPT_MODEL,
+  BEARER_TOKEN: process.env.BEARER_TOKEN,
+  PINECONE_INDEX: process.env.PINECONE_INDEX,
+  PINECONE_ENVIRONMENT: process.env.PINECONE_ENVIRONMENT,
+  PINECONE_API_KEY: process.env.PINECONE_API_KEY,
+  PINECONE_PROJECT_ID: process.env.PINECONE_PROJECT_ID,
   SCRAPER_KEY: process.env.SCRAPER_KEY
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 }
