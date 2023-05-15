@@ -77,13 +77,14 @@ export default function Home({
 export const getServerSideProps: GetServerSideProps = async () => {
   let infoblobs = null
   let pinecone = null
-  try {
-    const scraperRes = await fetch('http://localhost:5001/api/data', {
-      headers: {
-        'x-scaper-key': `${process.env.SCRAPER_KEY}`,
-      },
-    })
 
+  const scraperRes = await fetch('http://api-and-scraper:8080/api/data', {
+    headers: {
+      'x-scaper-key': `${process.env.SCRAPER_KEY}`,
+    },
+  })
+  infoblobs = await scraperRes.json()
+  try {
     const pineconeRes = await fetch(
       `https://${process.env.PINECONE_INDEX}-${process.env.PINECONE_PROJECT_ID}.svc.${process.env.PINECONE_ENVIRONMENT}.pinecone.io/describe_index_stats`,
       {
@@ -96,7 +97,13 @@ export const getServerSideProps: GetServerSideProps = async () => {
     )
 
     pinecone = await pineconeRes.json()
-    infoblobs = await scraperRes.json()
+
+    pinecone = {
+      name: process.env.PINECONE_INDEX,
+      region: process.env.PINECONE_ENVIRONMENT,
+      dimensions: pinecone.dimension,
+      vectors: pinecone.namespaces[''].vectorCount,
+    }
   } catch (error) {
     console.log(error)
     pinecone = {
@@ -110,12 +117,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
       infoblobs,
-      pinecone: {
-        name: process.env.PINECONE_INDEX,
-        region: process.env.PINECONE_ENVIRONMENT,
-        dimensions: pinecone.dimension,
-        vectors: pinecone.namespaces[''].vectorCount,
-      },
+      pinecone,
     },
   }
 }
