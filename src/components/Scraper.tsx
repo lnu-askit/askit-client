@@ -4,7 +4,8 @@ export const Scraper = () => {
       <div className="flex h-full w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
         <span>
           <span className="font-bold text-red-500">Warning! </span>Running the scraper with a high
-          number of pages can take a very long time.
+          number of pages can take a<span className="font-bold"> very </span>
+          long time.
         </span>
 
         <div className="flex flex-col">
@@ -15,14 +16,6 @@ export const Scraper = () => {
             placeholder="all pages"
             min={1}
             max={2000}
-          />
-        </div>
-        <div className="flex flex-col">
-          <span className="font-extrabold">API Key (x-api-scraper)</span>
-          <input
-            className="w-36 rounded-md border border-slate-800 p-1 text-slate-800"
-            type="text"
-            placeholder="x-api-scraper key"
           />
         </div>
       </div>
