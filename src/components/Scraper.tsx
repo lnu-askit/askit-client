@@ -10,7 +10,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
   return (
     <>
       <form
-        className="flex h-full flex-col"
+        className="flex h-full w-full flex-col"
         onSubmit={async (e) => {
           e.preventDefault()
           onRun(1, 'keykey')
