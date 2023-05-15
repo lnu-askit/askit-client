@@ -8,6 +8,15 @@ type ScraperInputProps = {
   onRun: (pages: number, key: string) => void
 }
 
+type ScraperFormEventTarget = EventTarget & {
+  pages: {
+    value: number
+  }
+  key: {
+    value: string
+  }
+}
+
 export const Scraper = ({ onRun }: ScraperInputProps) => {
   const [active, setActive] = useState(false)
 
@@ -17,7 +26,8 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
         className="flex h-full w-full flex-col"
         onSubmit={async (e) => {
           e.preventDefault()
-          onRun(1, 'keykey')
+          const target = e.target as ScraperFormEventTarget
+          onRun(target.pages.value, target.key.value)
           setActive(true)
         }}
       >
@@ -31,6 +41,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
           <div className="flex flex-col">
             <span className="font-extrabold">Pages</span>
             <input
+              name="pages"
               disabled={active}
               className="w-24 rounded-md border border-slate-800 p-1 text-slate-800"
               type="number"
@@ -43,6 +54,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
           <div className="flex flex-col">
             <span className="font-extrabold">API Key (x-api-scraper)</span>
             <input
+              name="key"
               disabled={active}
               className="w-36 rounded-md border border-slate-800 p-1 text-slate-800"
               type="text"
