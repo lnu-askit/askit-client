@@ -1,26 +1,19 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-export const Scraper = () => {
-  async function runScraper(pages: number, key: string) {
-    await fetch('https://api-and-scraper:8080/api/run-scraper', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-scraper-key': key,
-      },
-      body: JSON.stringify({
-        pages: pages,
-      }),
-    })
-  }
 
+type ScraperInputProps = {
+  onRun: (pages: number, key: string) => void
+}
+
+export const Scraper = ({ onRun }: ScraperInputProps) => {
   return (
     <>
       <form
         className="flex h-full flex-col"
         onSubmit={async (e) => {
           e.preventDefault()
-          await runScraper(1, 'keykey')
+          onRun(1, 'keykey')
         }}
       >
         <div className="flex h-full w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
