@@ -2,11 +2,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
+import { useState } from 'react'
+
 type ScraperInputProps = {
   onRun: (pages: number, key: string) => void
 }
 
 export const Scraper = ({ onRun }: ScraperInputProps) => {
+  const [active, setActive] = useState(false)
+
   return (
     <>
       <form
@@ -14,6 +18,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
         onSubmit={async (e) => {
           e.preventDefault()
           onRun(1, 'keykey')
+          setActive(true)
         }}
       >
         <div className="flex h-full w-full flex-col gap-2 border-b border-slate-800 bg-gray-100 p-2 text-slate-800">
@@ -26,6 +31,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
           <div className="flex flex-col">
             <span className="font-extrabold">Pages</span>
             <input
+              disabled={active}
               className="w-24 rounded-md border border-slate-800 p-1 text-slate-800"
               type="number"
               placeholder="all pages"
@@ -37,6 +43,7 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
           <div className="flex flex-col">
             <span className="font-extrabold">API Key (x-api-scraper)</span>
             <input
+              disabled={active}
               className="w-36 rounded-md border border-slate-800 p-1 text-slate-800"
               type="text"
               placeholder="x-api-scraper key"
@@ -44,7 +51,10 @@ export const Scraper = ({ onRun }: ScraperInputProps) => {
           </div>
         </div>
 
-        <button className="m-1 w-fit shrink grow place-self-center rounded-lg border border-slate-800 bg-slate-600 py-1 px-2 disabled:border-spacing-1 disabled:bg-slate-800">
+        <button
+          disabled={active}
+          className="m-1 w-fit shrink grow place-self-center rounded-lg border border-slate-800 bg-slate-600 py-1 px-2 disabled:bg-slate-800"
+        >
           Run Scraper
         </button>
       </form>
